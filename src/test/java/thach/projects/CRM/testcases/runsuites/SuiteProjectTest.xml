@@ -1,0 +1,19 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Project rise.fairsketch.com with Maven">
+
+    <!--    <parameter name="browserType" value="chrome"/>-->
+    <!--    <parameter name="webURL" value="https://rise.fairsketch.com/signin"/>-->
+
+    <listeners>
+        <listener class-name="thach.utils.listeners.ReportListener"></listener>
+    </listeners>
+
+    <test name="CRM page">
+        <classes>
+            <!--                        <class name="thach.projects.CRM.testcases.SignInTest">-->
+            <class name="thach.projects.CRM.testcases.ProjectsTest">
+                <!--            <class name="thach.projects.CRM.testcases.PostPageTest">-->
+            </class>
+        </classes>
+    </test>
+</suite>

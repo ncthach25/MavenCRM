@@ -1,0 +1,68 @@
+package thach.projects.CRM.testcases;
+
+import io.github.bonigarcia.wdm.WebDriverManager;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.Assert;
+import org.testng.ITestResult;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+import thach.utils.helpers.CaptureHelpers;
+
+import java.time.Duration;
+
+public class CaptureScreenshot {
+
+    private WebDriver driver;
+
+    @BeforeClass
+    public void setup() throws Exception {
+        CaptureHelpers.startRecord("Test01");//Bắt đầu record video
+
+        WebDriverManager.chromedriver().setup();
+        driver = new ChromeDriver();
+
+        driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
+        driver.manage().window().maximize();
+    }
+
+    @Test(priority = 1)
+    public void homePage() throws Exception {
+        driver.get("https://anhtester.com");
+        //step này cố tình Fail để chụp màn hình lại
+        Assert.assertEquals(driver.getTitle(), "Anh Tester - Automation Test");
+    }
+
+    @Test(priority = 2)
+    public void loginPage() throws Exception {
+        driver.findElement(By.id("btn-login")).click();
+    }
+
+    // Nó sẽ thực thi sau mỗi lần thực thi testcase (@Test)
+    @AfterMethod
+    public void takeScreenshot(ITestResult result) throws InterruptedException {
+        Thread.sleep(1000);
+        //Khởi tạo đối tượng result thuộc ITestResult để lấy trạng thái và tên của từng Test Case
+        //Ở đây sẽ so sánh điều kiện nếu testcase passed hoặc failed
+        //passed = SUCCESS và failed = FAILURE
+        if (ITestResult.FAILURE == result.getStatus()) {
+            try {
+                CaptureHelpers.captureScreenshot(driver, result.getName());
+            } catch (Exception e) {
+                System.out.println("Exception while taking screenshot " + e.getMessage());
+            }
+        }
+    }
+
+    @AfterClass
+    public void tearDown() throws Exception {
+        Thread.sleep(1000);
+        driver.quit();
+        CaptureHelpers.stopRecord();//Dừng video
+    }
+
+}
